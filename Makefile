@@ -15,7 +15,7 @@ testSOFA: testSOFA.c
 	gcc testSOFA.c -o testSOFA -lsofa_c -lm
 
 comparelibNOVA-NOVAS-SOFA-ERFA: comparelibNOVA-NOVAS-SOFA-ERFA.c
-	gcc comparelibNOVA-NOVAS-SOFA-ERFA.c novas.c novascon.c nutation.c solsys3.c readeph0.c -o comparelibNOVA-NOVAS-SOFA -lnova -lsofa_c -lerfa -lm
+	gcc comparelibNOVA-NOVAS-SOFA-ERFA.c novas.c novascon.c nutation.c solsys3.c readeph0.c -o comparelibNOVA-NOVAS-SOFA-ERFA -lnova -lsofa_c -lerfa -lm
 
 clean:
 	rm -f testERFA testlibNOVA testNOVAS testSOFA comparelibNOVA-NOVAS-SOFA-ERFA
