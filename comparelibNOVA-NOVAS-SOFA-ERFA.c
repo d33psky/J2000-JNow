@@ -122,14 +122,34 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
+    // Make TT julian date for Atci13 call
+    double tai1, tai2;
+    double tt1, tt2;
+    result = iauUtctai( utc1, utc2, &tai1, &tai2 );
+    if (result != 0) {
+        printf("iauUtctai call failed\n");
+        exit(1);
+    }
+    result = iauTaitt(  tai1, tai2, &tt1,  &tt2  );
+    if (result != 0) {
+        printf("iauTaitt call failed\n");
+        exit(1);
+    }
+
+    double ri, di;
+    // 'simple' Atci13
+    iauAtci13 ( rc, dc, pr, pd, px, rv, tt1, tt2, &ri, &di, &eo );
+    double SOFA_Atci13_ra  = ri * DR2D; // Radians to degrees
+    double SOFA_Atci13_dec = di * DR2D;
+
+    // 'full blown' Atco13
     result = iauAtco13 ( rc, dc, pr, pd, px, rv, utc1, utc2, dut1, elong, phi, hm, xp, yp, phpa, tc, rh, wl, &aob, &zob, &hob, &dob, &rob, &eo );
     if (result != 0) {
         printf("iauAtco13 call failed\n");
         exit(1);
     }
-
-    double SOFA_JNow_ra  = rob * DR2D; // Radians to degrees
-    double SOFA_JNow_dec = dob * DR2D;
+    double SOFA_Atco13_ra  = rob * DR2D; // Radians to degrees
+    double SOFA_Atco13_dec = dob * DR2D;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // ERFA
@@ -188,25 +208,28 @@ int main(int argc, char **argv) {
     double libNOVA_dec_das = fabs(libNOVA_JNow_dec - dec_center) * DD2R * DR2AS;
     double NOVAS_ra_das  = fabs(NOVAS_JNow_ra - ra_center)  * DD2R * DR2AS;
     double NOVAS_dec_das = fabs(NOVAS_JNow_dec - dec_center) * DD2R * DR2AS;
-    double SOFA_ra_das  = fabs(SOFA_JNow_ra - ra_center)  * DD2R * DR2AS;
-    double SOFA_dec_das = fabs(SOFA_JNow_dec - dec_center) * DD2R * DR2AS;
+    double SOFA_Atco13_ra_das  = fabs(SOFA_Atco13_ra - ra_center)  * DD2R * DR2AS;
+    double SOFA_Atco13_dec_das = fabs(SOFA_Atco13_dec - dec_center) * DD2R * DR2AS;
+    double SOFA_Atci13_ra_das  = fabs(SOFA_Atci13_ra - ra_center)  * DD2R * DR2AS;
+    double SOFA_Atci13_dec_das = fabs(SOFA_Atci13_dec - dec_center) * DD2R * DR2AS;
     double ERFA_ra_das  = fabs(ERFA_JNow_ra - ra_center)  * DD2R * DR2AS;
     double ERFA_dec_das = fabs(ERFA_JNow_dec - dec_center) * DD2R * DR2AS;
 
     double libNOVA_NOVAS_ra_das = fabs(NOVAS_JNow_ra - libNOVA_JNow_ra) * DD2R * DR2AS;
     double libNOVA_NOVAS_dec_das = fabs(NOVAS_JNow_dec - libNOVA_JNow_dec) * DD2R * DR2AS;
-    double NOVAS_SOFA_ra_das = fabs(NOVAS_JNow_ra - SOFA_JNow_ra) * DD2R * DR2AS;
-    double NOVAS_SOFA_dec_das = fabs(NOVAS_JNow_dec - SOFA_JNow_dec) * DD2R * DR2AS;
+    double NOVAS_SOFA_Atco13_ra_das = fabs(NOVAS_JNow_ra - SOFA_Atco13_ra) * DD2R * DR2AS;
+    double NOVAS_SOFA_Atco13_dec_das = fabs(NOVAS_JNow_dec - SOFA_Atco13_dec) * DD2R * DR2AS;
     double NOVAS_ERFA_ra_das = fabs(NOVAS_JNow_ra - ERFA_JNow_ra) * DD2R * DR2AS;
     double NOVAS_ERFA_dec_das = fabs(NOVAS_JNow_dec - ERFA_JNow_dec) * DD2R * DR2AS;
 
-    printf("                                              Δ J2000         Δ NOVAS \n");
-    printf("             ra°             ,dec°            ra″    ,dec″    ra″    ,dec″ \n");
-    printf("J2000        %.12f,%.12f\n", ra_center, dec_center);
-    printf("libNOVA JNow %.12f,%.12f %.3f,%.3f %7.3f,%7.3f\n", libNOVA_JNow_ra, libNOVA_JNow_dec, libNOVA_ra_das, libNOVA_dec_das, libNOVA_NOVAS_ra_das, libNOVA_NOVAS_dec_das);
-    printf("NOVAS   JNow %.12f,%.12f %.3f,%.3f\n", NOVAS_JNow_ra, NOVAS_JNow_dec, NOVAS_ra_das, NOVAS_dec_das);
-    printf("SOFA    JNow %.12f,%.12f %.3f,%.3f %.3f,%.3f\n", SOFA_JNow_ra, SOFA_JNow_dec, SOFA_ra_das, SOFA_dec_das, NOVAS_SOFA_ra_das, NOVAS_SOFA_dec_das);
-    printf("ERFA    JNow %.12f,%.12f %.3f,%.3f %.3f,%.3f\n", ERFA_JNow_ra, ERFA_JNow_dec, ERFA_ra_das, ERFA_dec_das, NOVAS_ERFA_ra_das, NOVAS_ERFA_dec_das);
+    printf("                                                   Δ J2000         Δ NOVAS \n");
+    printf("                  ra°             ,dec°            ra″    ,dec″    ra″    ,dec″ \n");
+    printf("J2000             %.12f,%.12f\n", ra_center, dec_center);
+    printf("libNOVA equ_prec2 %.12f,%.12f %7.3f,%7.3f %7.3f,%7.3f\n", libNOVA_JNow_ra, libNOVA_JNow_dec, libNOVA_ra_das, libNOVA_dec_das, libNOVA_NOVAS_ra_das, libNOVA_NOVAS_dec_das);
+    printf("NOVAS precession  %.12f,%.12f %7.3f,%7.3f\n", NOVAS_JNow_ra, NOVAS_JNow_dec, NOVAS_ra_das, NOVAS_dec_das);
+    printf("SOFA Atci13       %.12f,%.12f %7.3f,%7.3f\n", SOFA_Atci13_ra, SOFA_Atci13_dec, SOFA_Atci13_ra_das, SOFA_Atci13_dec_das);
+    printf("SOFA Atco13       %.12f,%.12f %7.3f,%7.3f %7.3f,%7.3f\n", SOFA_Atco13_ra, SOFA_Atco13_dec, SOFA_Atco13_ra_das, SOFA_Atco13_dec_das, NOVAS_SOFA_Atco13_ra_das, NOVAS_SOFA_Atco13_dec_das);
+    printf("ERFA Atci13       %.12f,%.12f %7.3f,%7.3f %7.3f,%7.3f\n", ERFA_JNow_ra, ERFA_JNow_dec, ERFA_ra_das, ERFA_dec_das, NOVAS_ERFA_ra_das, NOVAS_ERFA_dec_das);
 
     return(0);
 }
