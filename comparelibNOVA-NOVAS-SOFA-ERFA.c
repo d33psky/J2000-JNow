@@ -229,7 +229,7 @@ int main(int argc, char **argv) {
     printf("NOVAS precession  %.12f,%.12f %7.3f,%7.3f\n", NOVAS_JNow_ra, NOVAS_JNow_dec, NOVAS_ra_das, NOVAS_dec_das);
     printf("SOFA Atci13       %.12f,%.12f %7.3f,%7.3f\n", SOFA_Atci13_ra, SOFA_Atci13_dec, SOFA_Atci13_ra_das, SOFA_Atci13_dec_das);
     printf("SOFA Atco13       %.12f,%.12f %7.3f,%7.3f %7.3f,%7.3f\n", SOFA_Atco13_ra, SOFA_Atco13_dec, SOFA_Atco13_ra_das, SOFA_Atco13_dec_das, NOVAS_SOFA_Atco13_ra_das, NOVAS_SOFA_Atco13_dec_das);
-    printf("ERFA Atci13       %.12f,%.12f %7.3f,%7.3f %7.3f,%7.3f\n", ERFA_JNow_ra, ERFA_JNow_dec, ERFA_ra_das, ERFA_dec_das, NOVAS_ERFA_ra_das, NOVAS_ERFA_dec_das);
+    printf("ERFA Atco13       %.12f,%.12f %7.3f,%7.3f %7.3f,%7.3f\n", ERFA_JNow_ra, ERFA_JNow_dec, ERFA_ra_das, ERFA_dec_das, NOVAS_ERFA_ra_das, NOVAS_ERFA_dec_das);
 
     return(0);
 }
