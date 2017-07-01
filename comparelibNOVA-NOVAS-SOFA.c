@@ -135,19 +135,22 @@ int main(int argc, char **argv) {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     // calculate differences in arc seconds using DD2R and DR2AS from sofam.h 
-    double libNOVA_ra_das  = (libNOVA_JNow_ra - ra_center)  * DD2R * DR2AS;
-    double libNOVA_dec_das = (libNOVA_JNow_dec - dec_center) * DD2R * DR2AS;
-    double NOVAS_ra_das  = (NOVAS_JNow_ra - ra_center)  * DD2R * DR2AS;
-    double NOVAS_dec_das = (NOVAS_JNow_dec - dec_center) * DD2R * DR2AS;
-    double SOFA_ra_das  = (SOFA_JNow_ra - ra_center)  * DD2R * DR2AS;
-    double SOFA_dec_das = (SOFA_JNow_dec - dec_center) * DD2R * DR2AS;
-    double NOVAS_SOFA_ra_das = (NOVAS_JNow_ra - SOFA_JNow_ra) * DD2R * DR2AS;
-    double NOVAS_SOFA_dec_das = (NOVAS_JNow_dec - SOFA_JNow_dec) * DD2R * DR2AS;
+    double libNOVA_ra_das  = fabs(libNOVA_JNow_ra - ra_center)  * DD2R * DR2AS;
+    double libNOVA_dec_das = fabs(libNOVA_JNow_dec - dec_center) * DD2R * DR2AS;
+    double NOVAS_ra_das  = fabs(NOVAS_JNow_ra - ra_center)  * DD2R * DR2AS;
+    double NOVAS_dec_das = fabs(NOVAS_JNow_dec - dec_center) * DD2R * DR2AS;
+    double SOFA_ra_das  = fabs(SOFA_JNow_ra - ra_center)  * DD2R * DR2AS;
+    double SOFA_dec_das = fabs(SOFA_JNow_dec - dec_center) * DD2R * DR2AS;
+
+    double libNOVA_NOVAS_ra_das = fabs(NOVAS_JNow_ra - libNOVA_JNow_ra) * DD2R * DR2AS;
+    double libNOVA_NOVAS_dec_das = fabs(NOVAS_JNow_dec - libNOVA_JNow_dec) * DD2R * DR2AS;
+    double NOVAS_SOFA_ra_das = fabs(NOVAS_JNow_ra - SOFA_JNow_ra) * DD2R * DR2AS;
+    double NOVAS_SOFA_dec_das = fabs(NOVAS_JNow_dec - SOFA_JNow_dec) * DD2R * DR2AS;
 
     printf("                                              Δ J2000         Δ NOVAS \n");
     printf("             ra°             ,dec°            ra″    ,dec″    ra″    ,dec″ \n");
     printf("J2000        %.12f,%.12f\n", ra_center, dec_center);
-    printf("libNOVA JNow %.12f,%.12f %.3f,%.3f\n", libNOVA_JNow_ra, libNOVA_JNow_dec, libNOVA_ra_das, libNOVA_dec_das);
+    printf("libNOVA JNow %.12f,%.12f %.3f,%.3f %7.3f,%7.3f\n", libNOVA_JNow_ra, libNOVA_JNow_dec, libNOVA_ra_das, libNOVA_dec_das, libNOVA_NOVAS_ra_das, libNOVA_NOVAS_dec_das);
     printf("NOVAS   JNow %.12f,%.12f %.3f,%.3f\n", NOVAS_JNow_ra, NOVAS_JNow_dec, NOVAS_ra_das, NOVAS_dec_das);
     printf("SOFA    JNow %.12f,%.12f %.3f,%.3f %.3f,%.3f\n", SOFA_JNow_ra, SOFA_JNow_dec, SOFA_ra_das, SOFA_dec_das, NOVAS_SOFA_ra_das, NOVAS_SOFA_dec_das);
 
