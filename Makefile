@@ -25,6 +25,6 @@ test: all
 	./testNOVAS
 	./testERFA
 	./testSOFA
-	./j2000_jnow.py
+	./testAstropy.py
 	./comparelibNOVA-NOVAS-SOFA-ERFA
 
