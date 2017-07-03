@@ -217,6 +217,8 @@ int main(int argc, char **argv) {
 
     double libNOVA_NOVAS_ra_das = fabs(NOVAS_JNow_ra - libNOVA_JNow_ra) * DD2R * DR2AS;
     double libNOVA_NOVAS_dec_das = fabs(NOVAS_JNow_dec - libNOVA_JNow_dec) * DD2R * DR2AS;
+    double NOVAS_SOFA_Atci13_ra_das = fabs(NOVAS_JNow_ra - SOFA_Atci13_ra) * DD2R * DR2AS;
+    double NOVAS_SOFA_Atci13_dec_das = fabs(NOVAS_JNow_dec - SOFA_Atci13_dec) * DD2R * DR2AS;
     double NOVAS_SOFA_Atco13_ra_das = fabs(NOVAS_JNow_ra - SOFA_Atco13_ra) * DD2R * DR2AS;
     double NOVAS_SOFA_Atco13_dec_das = fabs(NOVAS_JNow_dec - SOFA_Atco13_dec) * DD2R * DR2AS;
     double NOVAS_ERFA_ra_das = fabs(NOVAS_JNow_ra - ERFA_JNow_ra) * DD2R * DR2AS;
@@ -227,7 +229,7 @@ int main(int argc, char **argv) {
     printf("J2000             %.12f,%.12f\n", ra_center, dec_center);
     printf("libNOVA equ_prec2 %.12f,%.12f %7.3f,%7.3f %7.3f,%7.3f\n", libNOVA_JNow_ra, libNOVA_JNow_dec, libNOVA_ra_das, libNOVA_dec_das, libNOVA_NOVAS_ra_das, libNOVA_NOVAS_dec_das);
     printf("NOVAS precession  %.12f,%.12f %7.3f,%7.3f\n", NOVAS_JNow_ra, NOVAS_JNow_dec, NOVAS_ra_das, NOVAS_dec_das);
-    printf("SOFA Atci13       %.12f,%.12f %7.3f,%7.3f\n", SOFA_Atci13_ra, SOFA_Atci13_dec, SOFA_Atci13_ra_das, SOFA_Atci13_dec_das);
+    printf("SOFA Atci13       %.12f,%.12f %7.3f,%7.3f %7.3f,%7.3f\n", SOFA_Atci13_ra, SOFA_Atci13_dec, SOFA_Atci13_ra_das, SOFA_Atci13_dec_das, NOVAS_SOFA_Atci13_ra_das, NOVAS_SOFA_Atci13_dec_das);
     printf("SOFA Atco13       %.12f,%.12f %7.3f,%7.3f %7.3f,%7.3f\n", SOFA_Atco13_ra, SOFA_Atco13_dec, SOFA_Atco13_ra_das, SOFA_Atco13_dec_das, NOVAS_SOFA_Atco13_ra_das, NOVAS_SOFA_Atco13_dec_das);
     printf("ERFA Atco13       %.12f,%.12f %7.3f,%7.3f %7.3f,%7.3f\n", ERFA_JNow_ra, ERFA_JNow_dec, ERFA_ra_das, ERFA_dec_das, NOVAS_ERFA_ra_das, NOVAS_ERFA_dec_das);
 
