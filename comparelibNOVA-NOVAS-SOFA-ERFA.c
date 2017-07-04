@@ -139,7 +139,7 @@ int main(int argc, char **argv) {
     double ri, di;
     // 'simple' Atci13
     iauAtci13 ( rc, dc, pr, pd, px, rv, tt1, tt2, &ri, &di, &eo );
-    double SOFA_Atci13_ra  = ri * DR2D; // Radians to degrees
+    double SOFA_Atci13_ra  = iauAnp(ri - eo) * DR2D; // Radians to degrees
     double SOFA_Atci13_dec = di * DR2D;
 
     // 'full blown' Atco13
@@ -148,7 +148,8 @@ int main(int argc, char **argv) {
         printf("iauAtco13 call failed\n");
         exit(1);
     }
-    double SOFA_Atco13_ra  = rob * DR2D; // Radians to degrees
+    double SOFA_Atco13_ra  = iauAnp(rob - eo) * DR2D; // Radians to degrees
+    double SOFA_Atco13_ra_NOeo  = rob * DR2D; // Radians to degrees
     double SOFA_Atco13_dec = dob * DR2D;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -196,7 +197,7 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    double ERFA_JNow_ra  = erfa_rob * ERFA_DR2D; // Radians to degrees
+    double ERFA_JNow_ra  = eraAnp(erfa_rob - erfa_eo) * ERFA_DR2D; // Radians to degrees
     double ERFA_JNow_dec = erfa_dob * ERFA_DR2D;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -204,34 +205,37 @@ int main(int argc, char **argv) {
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     // calculate differences in arc seconds using DD2R and DR2AS from sofam.h 
-    double libNOVA_ra_das      = (libNOVA_JNow_ra  - ra_center ) * DD2R * DR2AS;
-    double libNOVA_dec_das     = (libNOVA_JNow_dec - dec_center) * DD2R * DR2AS;
-    double NOVAS_ra_das        = (NOVAS_JNow_ra    - ra_center ) * DD2R * DR2AS;
-    double NOVAS_dec_das       = (NOVAS_JNow_dec   - dec_center) * DD2R * DR2AS;
-    double SOFA_Atco13_ra_das  = (SOFA_Atco13_ra   - ra_center ) * DD2R * DR2AS;
-    double SOFA_Atco13_dec_das = (SOFA_Atco13_dec  - dec_center) * DD2R * DR2AS;
-    double SOFA_Atci13_ra_das  = (SOFA_Atci13_ra   - ra_center ) * DD2R * DR2AS;
-    double SOFA_Atci13_dec_das = (SOFA_Atci13_dec  - dec_center) * DD2R * DR2AS;
-    double ERFA_ra_das         = (ERFA_JNow_ra     - ra_center ) * DD2R * DR2AS;
-    double ERFA_dec_das        = (ERFA_JNow_dec    - dec_center) * DD2R * DR2AS;
+    double libNOVA_ra_das           = (libNOVA_JNow_ra     - ra_center ) * DD2R * DR2AS;
+    double libNOVA_dec_das          = (libNOVA_JNow_dec    - dec_center) * DD2R * DR2AS;
+    double NOVAS_ra_das             = (NOVAS_JNow_ra       - ra_center ) * DD2R * DR2AS;
+    double NOVAS_dec_das            = (NOVAS_JNow_dec      - dec_center) * DD2R * DR2AS;
+    double SOFA_Atco13_ra_das       = (SOFA_Atco13_ra      - ra_center ) * DD2R * DR2AS;
+    double SOFA_Atco13_ra_NOeo_das  = (SOFA_Atco13_ra_NOeo - ra_center ) * DD2R * DR2AS;
+    double SOFA_Atco13_dec_das      = (SOFA_Atco13_dec     - dec_center) * DD2R * DR2AS;
+    double SOFA_Atci13_ra_das       = (SOFA_Atci13_ra      - ra_center ) * DD2R * DR2AS;
+    double SOFA_Atci13_dec_das      = (SOFA_Atci13_dec     - dec_center) * DD2R * DR2AS;
+    double ERFA_ra_das              = (ERFA_JNow_ra        - ra_center ) * DD2R * DR2AS;
+    double ERFA_dec_das             = (ERFA_JNow_dec       - dec_center) * DD2R * DR2AS;
 
-    double NOVAS_libNOVA_ra_das      = (libNOVA_JNow_ra  - NOVAS_JNow_ra ) * DD2R * DR2AS;
-    double NOVAS_libNOVA_dec_das     = (libNOVA_JNow_dec - NOVAS_JNow_dec) * DD2R * DR2AS;
-    double NOVAS_SOFA_Atci13_ra_das  = (SOFA_Atci13_ra   - NOVAS_JNow_ra ) * DD2R * DR2AS;
-    double NOVAS_SOFA_Atci13_dec_das = (SOFA_Atci13_dec  - NOVAS_JNow_dec) * DD2R * DR2AS;
-    double NOVAS_SOFA_Atco13_ra_das  = (SOFA_Atco13_ra   - NOVAS_JNow_ra ) * DD2R * DR2AS;
-    double NOVAS_SOFA_Atco13_dec_das = (SOFA_Atco13_dec  - NOVAS_JNow_dec) * DD2R * DR2AS;
-    double NOVAS_ERFA_ra_das         = (ERFA_JNow_ra     - NOVAS_JNow_ra ) * DD2R * DR2AS;
-    double NOVAS_ERFA_dec_das        = (ERFA_JNow_dec    - NOVAS_JNow_dec) * DD2R * DR2AS;
+    double NOVAS_libNOVA_ra_das           = (libNOVA_JNow_ra     - NOVAS_JNow_ra ) * DD2R * DR2AS;
+    double NOVAS_libNOVA_dec_das          = (libNOVA_JNow_dec    - NOVAS_JNow_dec) * DD2R * DR2AS;
+    double NOVAS_SOFA_Atci13_ra_das       = (SOFA_Atci13_ra      - NOVAS_JNow_ra ) * DD2R * DR2AS;
+    double NOVAS_SOFA_Atci13_dec_das      = (SOFA_Atci13_dec     - NOVAS_JNow_dec) * DD2R * DR2AS;
+    double NOVAS_SOFA_Atco13_ra_das       = (SOFA_Atco13_ra      - NOVAS_JNow_ra ) * DD2R * DR2AS;
+    double NOVAS_SOFA_Atco13_ra_NOeo_das  = (SOFA_Atco13_ra_NOeo - NOVAS_JNow_ra ) * DD2R * DR2AS;
+    double NOVAS_SOFA_Atco13_dec_das      = (SOFA_Atco13_dec     - NOVAS_JNow_dec) * DD2R * DR2AS;
+    double NOVAS_ERFA_ra_das              = (ERFA_JNow_ra        - NOVAS_JNow_ra ) * DD2R * DR2AS;
+    double NOVAS_ERFA_dec_das             = (ERFA_JNow_dec       - NOVAS_JNow_dec) * DD2R * DR2AS;
 
-    double SOFA_Atco13_libNOVA_ra_das      = (libNOVA_JNow_ra  - SOFA_Atco13_ra ) * DD2R * DR2AS;
-    double SOFA_Atco13_libNOVA_dec_das     = (libNOVA_JNow_dec - SOFA_Atco13_dec) * DD2R * DR2AS;
-    double SOFA_Atco13_NOVAS_ra_das        = (NOVAS_JNow_ra    - SOFA_Atco13_ra ) * DD2R * DR2AS;
-    double SOFA_Atco13_NOVAS_dec_das       = (NOVAS_JNow_dec   - SOFA_Atco13_dec) * DD2R * DR2AS;
-    double SOFA_Atco13_SOFA_Atci13_ra_das  = (SOFA_Atci13_ra   - SOFA_Atco13_ra ) * DD2R * DR2AS;
-    double SOFA_Atco13_SOFA_Atci13_dec_das = (SOFA_Atci13_dec  - SOFA_Atco13_dec) * DD2R * DR2AS;
-    double SOFA_Atco13_ERFA_ra_das         = (ERFA_JNow_ra     - SOFA_Atco13_ra ) * DD2R * DR2AS;
-    double SOFA_Atco13_ERFA_dec_das        = (ERFA_JNow_dec    - SOFA_Atco13_dec) * DD2R * DR2AS;
+    double SOFA_Atco13_libNOVA_ra_das          = (libNOVA_JNow_ra     - SOFA_Atco13_ra ) * DD2R * DR2AS;
+    double SOFA_Atco13_libNOVA_dec_das         = (libNOVA_JNow_dec    - SOFA_Atco13_dec) * DD2R * DR2AS;
+    double SOFA_Atco13_NOVAS_ra_das            = (NOVAS_JNow_ra       - SOFA_Atco13_ra ) * DD2R * DR2AS;
+    double SOFA_Atco13_NOVAS_dec_das           = (NOVAS_JNow_dec      - SOFA_Atco13_dec) * DD2R * DR2AS;
+    double SOFA_Atco13_SOFA_Atci13_ra_das      = (SOFA_Atci13_ra      - SOFA_Atco13_ra ) * DD2R * DR2AS;
+    double SOFA_Atco13_SOFA_Atci13_dec_das     = (SOFA_Atci13_dec     - SOFA_Atco13_dec) * DD2R * DR2AS;
+    double SOFA_Atco13_SOFA_Atco13_ra_NOeo_das = (SOFA_Atco13_ra_NOeo - SOFA_Atco13_ra ) * DD2R * DR2AS;
+    double SOFA_Atco13_ERFA_ra_das             = (ERFA_JNow_ra        - SOFA_Atco13_ra ) * DD2R * DR2AS;
+    double SOFA_Atco13_ERFA_dec_das            = (ERFA_JNow_dec       - SOFA_Atco13_dec) * DD2R * DR2AS;
 
     printf("                                                   Δ J2000             Δ NOVAS             Δ SOFA Atco13\n");
     printf("                  ra°             ,dec°            ra″      ,dec″      ra″      ,dec″      ra″      ,dec″ \n");
@@ -240,6 +244,7 @@ int main(int argc, char **argv) {
     printf("NOVAS precession  %.12f,%.12f %9.3f,%9.3f                     %9.3f,%9.3f\n", NOVAS_JNow_ra, NOVAS_JNow_dec, NOVAS_ra_das, NOVAS_dec_das, SOFA_Atco13_NOVAS_ra_das, SOFA_Atco13_NOVAS_dec_das);
     printf("SOFA Atci13       %.12f,%.12f %9.3f,%9.3f %9.3f,%9.3f %9.3f,%9.3f\n", SOFA_Atci13_ra, SOFA_Atci13_dec, SOFA_Atci13_ra_das, SOFA_Atci13_dec_das, NOVAS_SOFA_Atci13_ra_das, NOVAS_SOFA_Atci13_dec_das, SOFA_Atco13_SOFA_Atci13_ra_das, SOFA_Atco13_SOFA_Atci13_dec_das);
     printf("SOFA Atco13       %.12f,%.12f %9.3f,%9.3f %9.3f,%9.3f\n", SOFA_Atco13_ra, SOFA_Atco13_dec, SOFA_Atco13_ra_das, SOFA_Atco13_dec_das, NOVAS_SOFA_Atco13_ra_das, NOVAS_SOFA_Atco13_dec_das);
+    printf("SOFA Atco13 NO eo %.12f,%.12f %9.3f,%9.3f %9.3f,%9.3f %9.3f,%9.3f\n", SOFA_Atco13_ra_NOeo, SOFA_Atco13_dec, SOFA_Atco13_ra_NOeo_das, SOFA_Atco13_dec_das, NOVAS_SOFA_Atco13_ra_NOeo_das, NOVAS_SOFA_Atco13_dec_das, SOFA_Atco13_SOFA_Atco13_ra_NOeo_das , 0.0);
     printf("ERFA Atco13       %.12f,%.12f %9.3f,%9.3f %9.3f,%9.3f %9.3f,%9.3f\n", ERFA_JNow_ra, ERFA_JNow_dec, ERFA_ra_das, ERFA_dec_das, NOVAS_ERFA_ra_das, NOVAS_ERFA_dec_das, SOFA_Atco13_ERFA_ra_das, SOFA_Atco13_ERFA_dec_das);
 
     return(0);
