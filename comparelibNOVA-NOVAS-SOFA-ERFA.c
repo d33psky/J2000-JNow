@@ -115,7 +115,6 @@ int main(int argc, char **argv) {
     dc = DD2R * dec_center;
 
     dut1 = 0.36; // http://maia.usno.navy.mil/ser7/ser7.dat
-
     result = iauDtf2d ( "UTC", utc_tm->tm_year+1900, utc_tm->tm_mon+1, utc_tm->tm_mday, utc_tm->tm_hour, utc_tm->tm_min, utc_tm->tm_sec + ((double)tv.tv_usec / 1000000), &utc1, &utc2 );
     if (result != 0) {
         printf("iauDtf2d call failed\n");
@@ -142,7 +141,7 @@ int main(int argc, char **argv) {
     double SOFA_Atci13_ra  = iauAnp(ri - eo) * DR2D; // Radians to degrees
     double SOFA_Atci13_dec = di * DR2D;
 
-    // 'full blown' Atco13
+    // Atco13 with refraction
     result = iauAtco13 ( rc, dc, pr, pd, px, rv, utc1, utc2, dut1, elong, phi, hm, xp, yp, phpa, tc, rh, wl, &aob, &zob, &hob, &dob, &rob, &eo );
     if (result != 0) {
         printf("iauAtco13 call failed\n");
@@ -151,6 +150,15 @@ int main(int argc, char **argv) {
     double SOFA_Atco13_ra  = iauAnp(rob - eo) * DR2D; // Radians to degrees
     double SOFA_Atco13_ra_NOeo  = rob * DR2D; // Radians to degrees
     double SOFA_Atco13_dec = dob * DR2D;
+
+    // Atco13 withOUT refraction
+    result = iauAtco13 ( rc, dc, pr, pd, px, rv, utc1, utc2, dut1, elong, phi, hm, xp, yp, 0.0, 0.0, 0.0, 0.0, &aob, &zob, &hob, &dob, &rob, &eo );
+    if (result != 0) {
+        printf("iauAtco13 call failed\n");
+        exit(1);
+    }
+    double SOFA_Atco13_ra_WR  = iauAnp(rob - eo) * DR2D; // Radians to degrees
+    double SOFA_Atco13_dec_WR = dob * DR2D;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // ERFA
@@ -211,7 +219,9 @@ int main(int argc, char **argv) {
     double NOVAS_dec_das            = (NOVAS_JNow_dec      - dec_center) * DD2R * DR2AS;
     double SOFA_Atco13_ra_das       = (SOFA_Atco13_ra      - ra_center ) * DD2R * DR2AS;
     double SOFA_Atco13_ra_NOeo_das  = (SOFA_Atco13_ra_NOeo - ra_center ) * DD2R * DR2AS;
+    double SOFA_Atco13_ra_WR_das    = (SOFA_Atco13_ra_WR   - ra_center ) * DD2R * DR2AS;
     double SOFA_Atco13_dec_das      = (SOFA_Atco13_dec     - dec_center) * DD2R * DR2AS;
+    double SOFA_Atco13_dec_WR_das   = (SOFA_Atco13_dec_WR  - dec_center) * DD2R * DR2AS;
     double SOFA_Atci13_ra_das       = (SOFA_Atci13_ra      - ra_center ) * DD2R * DR2AS;
     double SOFA_Atci13_dec_das      = (SOFA_Atci13_dec     - dec_center) * DD2R * DR2AS;
     double ERFA_ra_das              = (ERFA_JNow_ra        - ra_center ) * DD2R * DR2AS;
@@ -223,7 +233,9 @@ int main(int argc, char **argv) {
     double NOVAS_SOFA_Atci13_dec_das      = (SOFA_Atci13_dec     - NOVAS_JNow_dec) * DD2R * DR2AS;
     double NOVAS_SOFA_Atco13_ra_das       = (SOFA_Atco13_ra      - NOVAS_JNow_ra ) * DD2R * DR2AS;
     double NOVAS_SOFA_Atco13_ra_NOeo_das  = (SOFA_Atco13_ra_NOeo - NOVAS_JNow_ra ) * DD2R * DR2AS;
+    double NOVAS_SOFA_Atco13_ra_WR_das    = (SOFA_Atco13_ra_WR   - NOVAS_JNow_ra ) * DD2R * DR2AS;
     double NOVAS_SOFA_Atco13_dec_das      = (SOFA_Atco13_dec     - NOVAS_JNow_dec) * DD2R * DR2AS;
+    double NOVAS_SOFA_Atco13_dec_WR_das   = (SOFA_Atco13_dec_WR  - NOVAS_JNow_dec) * DD2R * DR2AS;
     double NOVAS_ERFA_ra_das              = (ERFA_JNow_ra        - NOVAS_JNow_ra ) * DD2R * DR2AS;
     double NOVAS_ERFA_dec_das             = (ERFA_JNow_dec       - NOVAS_JNow_dec) * DD2R * DR2AS;
 
@@ -234,6 +246,8 @@ int main(int argc, char **argv) {
     double SOFA_Atco13_SOFA_Atci13_ra_das      = (SOFA_Atci13_ra      - SOFA_Atco13_ra ) * DD2R * DR2AS;
     double SOFA_Atco13_SOFA_Atci13_dec_das     = (SOFA_Atci13_dec     - SOFA_Atco13_dec) * DD2R * DR2AS;
     double SOFA_Atco13_SOFA_Atco13_ra_NOeo_das = (SOFA_Atco13_ra_NOeo - SOFA_Atco13_ra ) * DD2R * DR2AS;
+    double SOFA_Atco13_SOFA_Atco13_ra_WR_das   = (SOFA_Atco13_ra_WR   - SOFA_Atco13_ra ) * DD2R * DR2AS;
+    double SOFA_Atco13_SOFA_Atco13_dec_WR_das  = (SOFA_Atco13_dec_WR  - SOFA_Atco13_dec) * DD2R * DR2AS;
     double SOFA_Atco13_ERFA_ra_das             = (ERFA_JNow_ra        - SOFA_Atco13_ra ) * DD2R * DR2AS;
     double SOFA_Atco13_ERFA_dec_das            = (ERFA_JNow_dec       - SOFA_Atco13_dec) * DD2R * DR2AS;
 
@@ -244,6 +258,7 @@ int main(int argc, char **argv) {
     printf("NOVAS precession  %.12f,%.12f %9.3f,%9.3f                     %9.3f,%9.3f\n", NOVAS_JNow_ra, NOVAS_JNow_dec, NOVAS_ra_das, NOVAS_dec_das, SOFA_Atco13_NOVAS_ra_das, SOFA_Atco13_NOVAS_dec_das);
     printf("SOFA Atci13       %.12f,%.12f %9.3f,%9.3f %9.3f,%9.3f %9.3f,%9.3f\n", SOFA_Atci13_ra, SOFA_Atci13_dec, SOFA_Atci13_ra_das, SOFA_Atci13_dec_das, NOVAS_SOFA_Atci13_ra_das, NOVAS_SOFA_Atci13_dec_das, SOFA_Atco13_SOFA_Atci13_ra_das, SOFA_Atco13_SOFA_Atci13_dec_das);
     printf("SOFA Atco13       %.12f,%.12f %9.3f,%9.3f %9.3f,%9.3f\n", SOFA_Atco13_ra, SOFA_Atco13_dec, SOFA_Atco13_ra_das, SOFA_Atco13_dec_das, NOVAS_SOFA_Atco13_ra_das, NOVAS_SOFA_Atco13_dec_das);
+    printf("SOFA Atco13 NO r  %.12f,%.12f %9.3f,%9.3f %9.3f,%9.3f %9.3f,%9.3f\n", SOFA_Atco13_ra_WR, SOFA_Atco13_dec_WR, SOFA_Atco13_ra_WR_das, SOFA_Atco13_dec_WR_das, NOVAS_SOFA_Atco13_ra_WR_das, NOVAS_SOFA_Atco13_dec_WR_das, SOFA_Atco13_SOFA_Atco13_ra_WR_das , SOFA_Atco13_SOFA_Atco13_dec_WR_das);
     printf("SOFA Atco13 NO eo %.12f,%.12f %9.3f,%9.3f %9.3f,%9.3f %9.3f,%9.3f\n", SOFA_Atco13_ra_NOeo, SOFA_Atco13_dec, SOFA_Atco13_ra_NOeo_das, SOFA_Atco13_dec_das, NOVAS_SOFA_Atco13_ra_NOeo_das, NOVAS_SOFA_Atco13_dec_das, SOFA_Atco13_SOFA_Atco13_ra_NOeo_das , 0.0);
     printf("ERFA Atco13       %.12f,%.12f %9.3f,%9.3f %9.3f,%9.3f %9.3f,%9.3f\n", ERFA_JNow_ra, ERFA_JNow_dec, ERFA_ra_das, ERFA_dec_das, NOVAS_ERFA_ra_das, NOVAS_ERFA_dec_das, SOFA_Atco13_ERFA_ra_das, SOFA_Atco13_ERFA_dec_das);
 
