@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    double JNow_ra  = rob * DR2D; // Radians to degrees
+    double JNow_ra  = iauAnp(rob - eo) * DR2D; // Convert CIO RA to equinox of date RA by subtracting the equation of the origins, Radians to degrees
     double JNow_dec = dob * DR2D;
 
     printf("J2000 ra,dec %.12f , %.12f\nJNow  ra,dec %.12f , %.12f\n", ra_center, dec_center, JNow_ra, JNow_dec);
