@@ -2,7 +2,7 @@
 
 all: testERFA testlibNOVA testNOVAS testSOFA comparelibNOVA-NOVAS-SOFA-ERFA
 
-testERFA:
+testERFA: testERFA.c
 	gcc testERFA.c -o testERFA -lerfa -lm
 
 testlibNOVA: testlibNOVA.c
