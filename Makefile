@@ -3,7 +3,7 @@
 all: testERFA testlibNOVA testNOVAS testSOFA comparelibNOVA-NOVAS-SOFA-ERFA
 
 eraAtci13: eraAtci13.c
-	gcc eraAtci13.c -o eraAtci13 -lerfa -lm
+	gcc eraAtci13.c -o eraAtci13 -lerfa -lnova -lm
 
 testERFA: testERFA.c
 	gcc testERFA.c -o testERFA -lerfa -lm
